@@ -1,16 +1,20 @@
+from flask import Flask, request, jsonify
 import pandas as pd
-import os
+
+app = Flask(__name__)
 
 # Read Excel file
-file_path = '/Users/ericluong/Documents/bll2/Python/dvf_bll_bld_001_v01.csv'
+file_path = './dvf_bll_bld_001_v01.csv'
 df = pd.read_csv(file_path)
 df = df.fillna(0)
+
 
 # Take in user input
 year1 = int(input("Enter the first year: "))
 year2 = int(input("Enter the second year: "))
 state_input = int(input("Enter the state: "))
 county_input = int(input("Enter the county: "))
+
 
 data_start = df[(df['year'] == 1920) & (df['state'] == state_input) & (df['county'] == county_input)]
 data_end = df[(df['year'] == 1997) & (df['state'] == state_input) & (df['county'] == county_input)]
@@ -28,7 +32,7 @@ else:
     start_land = data_start['liftot'].values[0]
     end_land = data_end['liftot'].values[0]
     start_value = (data_start['valtot'].values[0])/(data_start['liftot'].values[0])
-    print(f'{data_start['liftot'].values[0]}, {data_start['valtot'].values[0]}')
+    # print(f'{data_start['liftot'].values[0]}, {data_start['valtot'].values[0]}')
     end_value = data_end['valavg'].values[0]
 
     # Land data for inputted Year 1 and Year 2
