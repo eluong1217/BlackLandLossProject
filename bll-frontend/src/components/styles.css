@@ -1,0 +1,176 @@
+html {
+    font-family: system-ui, sans-serif;
+    font-size: 1.25rem;
+  }
+  
+  body {
+    margin: 0;
+  }
+  
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  path {
+    fill: #2a354d;
+  }
+  
+  .App {
+    font-family: sans-serif;
+    text-align: center;
+  }
+  
+  /* ✅ Default map size for mobile screens */
+  .map-container {
+    width: 300px;  /* Default width */
+    height: 300px; /* Default height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  
+  /* ✅ Expand map size for screens larger than 768px */
+  @media (min-width: 768px) {
+    .map-container {
+      width: 600px;
+      height: 375px;
+    }
+  }
+  
+/* ✅ General Dropdown Styling */
+select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  cursor: pointer;
+  appearance: none; 
+  color: #2a354d;
+}
+
+/* ✅ Hover & Focus Effects */
+select:hover {
+  border-color: #007bff;
+}
+
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ✅ Dropdown Options Styling */
+select option {
+  background: #ffffff; /* Default background */
+  color: #333; /* Text color */
+  padding: 12px; /* More spacing */
+  font-size: 1rem;
+  transition: background 0.2s ease-in-out;
+}
+
+/* ✅ Hover Effect on Options */
+select option:hover {
+  background: #007bff; /* Highlighted background */
+  color: white;
+}
+
+/* ✅ Selected Option Styling */
+select option:checked {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+/* ✅ Smooth Transition */
+select option {
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Dual-Thumb Slider Container */
+.dual-slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ✅ Always-Visible Slider Track (Line) */
+.date-slider {
+    position: absolute;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #ddd;  /* Always visible track */
+    outline: none;
+    pointer-events: none;  /* ✅ Makes the track non-clickable */
+    border-radius: 3px;
+    z-index: 0; /* ✅ Keeps the line behind the thumbs */
+}
+
+/* ✅ The Background Fill Effect (Between the Thumbs) */
+.slider-fill {
+    position: absolute;
+    height: 6px;
+    background: rgb(255, 87, 51);  /* Custom color */
+    border-radius: 3px;
+    z-index: 0; /* ✅ Keeps the fill behind the thumbs */
+}
+
+/* ✅ The Solid Slider Thumbs */
+.date-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    background: rgb(255, 87, 51);
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto; /* ✅ Only thumbs are clickable */
+    border: 3px solid rgb(200, 50, 30);
+    position: relative;
+    z-index: 1; /* ✅ Ensures thumbs stay above the track */
+}
+
+/* ✅ Mozilla (Firefox) */
+.date-slider::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+    background: rgb(255, 87, 51);
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto; /* ✅ Only thumbs are clickable */
+    border: 3px solid rgb(200, 50, 30);
+    position: relative;
+    z-index: 1; /* ✅ Ensures thumbs stay above the track */
+}
+
+/* ✅ Hover Effect */
+.date-slider::-webkit-slider-thumb:hover,
+.date-slider::-moz-range-thumb:hover {
+    background: rgb(230, 70, 40);
+    transform: scale(1.1);
+}
+
+/* ✅ Active Effect (When Dragging) */
+.date-slider::-webkit-slider-thumb:active,
+.date-slider::-moz-range-thumb:active {
+    background: rgb(200, 50, 30);
+    transform: scale(1.2);
+}

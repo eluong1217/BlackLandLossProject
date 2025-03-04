@@ -40,3 +40,94 @@
 .read-the-docs {
   color: #888;
 }
+
+/* ✅ Dual-Thumb Slider Container */
+.dual-slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ Always-Visible Slider Track (Line) */
+.date-slider {
+  position: absolute;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: rgb(255, 150, 130); /* Lighter background */
+  outline: none;
+  pointer-events: none; /* ✅ Line is non-clickable */
+  border-radius: 3px;
+  z-index: 0; /* ✅ Keeps the line behind the thumbs */
+}
+
+/* ✅ The Background Fill Effect (Between the Thumbs) */
+.slider-fill {
+  position: absolute;
+  height: 6px;
+  background: rgb(255, 87, 51);  /* Exact color requested */
+  border-radius: 3px;
+  z-index: 0; /* ✅ Keeps the fill behind the thumbs */
+}
+
+/* ✅ The Improved Solid Slider Thumbs */
+.date-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px; /* ✅ Bigger size for better usability */
+  height: 26px;
+  background: rgb(255, 87, 51);  /* Solid custom color */
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto; /* ✅ Thumbs are clickable */
+  border: 3px solid rgb(200, 50, 30); /* Slightly darker border */
+  transition: transform 0.2s ease, background 0.2s ease;
+  position: relative;
+  z-index: 1; /* ✅ Keeps thumbs on top */
+}
+
+/* ✅ Mozilla (Firefox) */
+.date-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  background: rgb(255, 87, 51);
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto; /* ✅ Only thumbs are clickable */
+  border: 3px solid rgb(200, 50, 30);
+  transition: transform 0.2s ease, background 0.2s ease;
+  position: relative;
+  z-index: 1; /* ✅ Keeps thumbs on top */
+}
+
+/* ✅ Hover Effect */
+.date-slider::-webkit-slider-thumb:hover,
+.date-slider::-moz-range-thumb:hover {
+  background: rgb(230, 70, 40); /* Slightly darker on hover */
+  transform: scale(1.1);
+}
+
+/* ✅ Active Effect (When Dragging) */
+.date-slider::-webkit-slider-thumb:active,
+.date-slider::-moz-range-thumb:active {
+  background: rgb(200, 50, 30); /* Even darker when dragging */
+  transform: scale(1.2);
+}
+
+.year-labels span {
+  transform: scale(0.65); /* Shrinks the text */
+  display: inline-block; /* Ensures scaling works properly */
+}
+

@@ -1,85 +1,73 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import "./styles.css";
 
-const DataForm = () => {
-  const [statesAndCounties, setStatesAndCounties] = useState([]);
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedCounty, setSelectedCounty] = useState('');
-  const [dates, setDates] = useState([]);
-  const [filteredDates, setFilteredDates] = useState([]);
+const DataForm = ({ selectedState, setSelectedState, statesAndCounties }) => {
+  const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [counties, setCounties] = useState([]);
+  
+  // ✅ Fixed list of years for the slider
+  const allowedYears = [1920, 1925, 1930, 1935, 1940, 1945, 1950, 1954, 1959, 
+                        1964, 1969, 1974, 1978, 1982, 1987, 1992, 1997];
 
-  // useEffect, useState, and useCallback are hooks that allow you to use state and other React features without writing a class.
+  // Convert years to index positions for the slider
+  const getYearIndex = (year) => allowedYears.indexOf(year);
+  const getYearFromIndex = (index) => allowedYears[index];
 
-  // Fetch the states and counties data when the component mounts
   useEffect(() => {
-    const fetchStatesAndCounties = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/get_states_and_counties');
-        const data = await response.json();
-        setStatesAndCounties(data);
-        setDates(data[0].dates)
-        setFilteredDates(data[0].dates)
-      } catch (error) {
-        console.error('Error fetching states and counties:', error);
+    if (selectedState) {
+      const stateData = statesAndCounties.find((state) => state.state_code === selectedState);
+
+      if (stateData) {
+        setCounties(stateData.counties);
+        setSelectedStartDate(allowedYears[0]);  // Set default start to first year
+        setSelectedEndDate(allowedYears[allowedYears.length - 1]); // Set default end to last year
+      } else {
+        setCounties([]);
       }
-    };
-
-    fetchStatesAndCounties();
-  }, []);
-
-  // Update counties based on the selected state
-  const handleStateChange = (event) => {
-    const stateCode = event.target.value;
-    setSelectedState(stateCode);
-
-    // Find the counties for the selected state
-    const stateData = statesAndCounties.find((state) => state.state_code === parseInt(stateCode));
-    setCounties(stateData ? stateData.counties : []);
-    setSelectedCounty('');
-  };
-
-  const handleCountyChange = (event) => {
-    setSelectedCounty(event.target.value);
-  };
-
-  const handleStartDateChange = (event) => {
-    setFilteredDates([...dates])
-    setSelectedStartDate(event.target.value);
-  }
-
-  const handleEndDateChange = (event) => {
-    setSelectedEndDate(event.target.value);
-  }
-
-  useEffect(() => {
-    try {
-      setFilteredDates([...dates].filter(date => date >= selectedStartDate))
-    } catch (error) {
-      console.error('Error filtering dates:', error);
+      setSelectedCounty("");
     }
-  },[selectedStartDate])
+  }, [selectedState, statesAndCounties]);
+
+  // Handle Start Date Change (Snaps to nearest allowed year)
+  const handleStartDateChange = (event) => {
+    const newIndex = parseInt(event.target.value, 10);
+    const newYear = getYearFromIndex(newIndex);
+
+    if (newYear <= selectedEndDate) {
+      setSelectedStartDate(newYear);
+    }
+  };
+
+  // Handle End Date Change (Snaps to nearest allowed year)
+  const handleEndDateChange = (event) => {
+    const newIndex = parseInt(event.target.value, 10);
+    const newYear = getYearFromIndex(newIndex);
+
+    if (newYear >= selectedStartDate) {
+      setSelectedEndDate(newYear);
+    }
+  };
 
   return (
-    <div>
+    <div className="data-form-container">
+      <h3>Select a State</h3>
       <form>
         <div>
-          <label>State:</label>
-          <select value={selectedState} onChange={handleStateChange} >
-            <option value="">Select State</option>
-            {statesAndCounties.map((state) => (
-              <option key={state.state_code} value={state.state_code}>
-                {state.state_name}
-              </option>
-            ))}
-          </select>
+          <p>{selectedState 
+            ? statesAndCounties.find(state => state.state_code === selectedState)?.state_name 
+            : "No state selected"}
+          </p>
         </div>
 
         {selectedState && (
-          <div>
+          <div className="dropdown-container">
             <label>County:</label>
-            <select value={selectedCounty} onChange={handleCountyChange} >
+            <select 
+              value={selectedCounty} 
+              onChange={(e) => setSelectedCounty(e.target.value)}
+            >
               <option value="">Select County</option>
               {counties.map((county, index) => (
                 <option key={index} value={county}>
@@ -90,35 +78,60 @@ const DataForm = () => {
           </div>
         )}
 
-       {selectedCounty && (
-          <div>
-            <label>Dates:</label>
-            <select value={selectedStartDate} onChange={handleStartDateChange}>
-              <option value="">Select start date</option>
-              {dates.map((dates,index) => (
-                <option key={index} value={dates}>
-                  {dates}
-                </option>
+        {/* ✅ Dual-Thumb Date Slider (Only Moves Between Allowed Years) */}
+        {selectedCounty && allowedYears.length > 0 && (
+          <div className="dual-slider-container">
+            <label>Selected Range: {selectedStartDate} → {selectedEndDate}</label>
+            <div className="slider-wrapper">
+              {/* Start Date Slider */}
+              <input
+                type="range"
+                min={0}
+                max={allowedYears.length - 1}
+                value={getYearIndex(selectedStartDate)}
+                onChange={handleStartDateChange}
+                step="1"
+                className="date-slider"
+              />
+              {/* End Date Slider */}
+              <input
+                type="range"
+                min={0}
+                max={allowedYears.length - 1}
+                value={getYearIndex(selectedEndDate)}
+                onChange={handleEndDateChange}
+                step="1"
+                className="date-slider"
+              />
+              {/* Background Fill Effect */}
+              <div
+                className="slider-fill"
+                style={{
+                  left: `${(getYearIndex(selectedStartDate) / (allowedYears.length - 1)) * 100}%`,
+                  right: `${100 - (getYearIndex(selectedEndDate) / (allowedYears.length - 1)) * 100}%`,
+                }}
+              />
+            </div>
+
+            {/* Year Labels Under Slider */}
+            <div className="year-labels">
+              {allowedYears.map((year, index) => (
+                <span key={index} style={{ left: `${(index / (allowedYears.length - 1)) * 100}%` }}>
+                  {year}
+                </span>
               ))}
-            </select>
-            <select value={selectedEndDate} onChange={handleEndDateChange}>
-              <option value="">Select end date</option>
-              {filteredDates.map((dates,index) => (
-                <option key={index} value={dates}>
-                  {dates}
-                </option>
-              ))}
-            </select>
+            </div>
           </div>
         )}
       </form>
 
-      <div>
+      <div className="selection-summary">
         {selectedState && selectedCounty && selectedStartDate && selectedEndDate && (
           <div>
-            <p>Selected State: {selectedState}</p>
-            <p>Selected County: {selectedCounty}</p>
-            <p>Selected Dates: {selectedStartDate} &#8594; {selectedEndDate}</p>
+            <h4>Selection Summary:</h4>
+            <p><strong>State:</strong> {statesAndCounties.find(state => state.state_code === selectedState)?.state_name}</p>
+            <p><strong>County:</strong> {selectedCounty}</p>
+            <p><strong>Dates:</strong> {selectedStartDate} → {selectedEndDate}</p>
           </div>
         )}
       </div>
