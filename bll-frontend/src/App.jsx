@@ -22,10 +22,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className="app-container">
       <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
       <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
-    </>
+    </div>
   );
 }
 

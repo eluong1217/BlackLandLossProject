@@ -130,6 +130,7 @@ select option {
     height: 6px;
     background: rgb(255, 87, 51);  /* Custom color */
     border-radius: 3px;
+    pointer-events: none; /* Prevents blocking interaction */
     z-index: 0; /* ✅ Keeps the fill behind the thumbs */
 }
 
