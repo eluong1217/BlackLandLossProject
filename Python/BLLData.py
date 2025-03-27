@@ -89,40 +89,48 @@ def get_data():
         name_input = data.get('name') 
         state_input = data.get('state')
 
-        # getting state data
-        data_start = df[(df['year'] == 1920) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_end = df[(df['year'] == 1997) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_year1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_year2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['county'] == 0)]
-
-        if data_year1.empty or data_year2.empty:
-            return jsonify({"error": "Data for the given year(s), state, or name is not available."})
-       
+        # Getting State Data
+        state_y1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['county'] == 0)]
+        state_y2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['county'] == 0)]
+        # Getting County Data
+        county_y1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['state'] == state_input)]
+        county_y2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['state'] == state_input)]
     
-        name_year1 = data_year1['name'].values[0]
-        start_land = data_start['liftot'].values[0]
-        end_land = data_end['liftot'].values[0]
+        if state_y1.empty or state_y2.empty:
+            return jsonify({"error": "Data for the given year(s), state, or name is not available."})
+        if county_y1.empty or county_y2.empty:
+            return jsonify({"error": "Data for the given year(s), state, or name is not available."})
 
-        land_owned_total_year1 = data_year1['liftot'].values[0]
-        land_owned_total_year2 = data_year2['liftot'].values[0]
 
-        value_total_year1 = data_year1['valtot'].values[0]
-        value_total_year2 = data_year2['valtot'].values[0]
-        value_average_year1 = data_year1['valavg'].values[0] 
-        value_average_year2 = data_year2['valavg'].values[0]
+        state_land_y1 = state_y1['liftot'].values[0]
+        state_land_y2 = state_y2['liftot'].values[0]
+        county_land_y1 = county_y1['liftot'].values[0]
+        county_land_y2 = county_y2['liftot'].values[0]
+        # land_owned_total_year1 = state_land_y1['liftot'].values[0]
+        # land_owned_total_year2 = state_land_y2['liftot'].values[0]
+        
 
-        val_acre_tot1 = value_total_year1 / land_owned_total_year1
-        val_acre_tot2 = value_total_year2 / land_owned_total_year2
 
-        if data_year1['liftot'].values[0] == -1 or data_year2['liftot'].values[0] == -1:
+        value_total_year1 = state_land_y1['valtot'].values[0]
+        value_total_year2 = state_land_y2['valtot'].values[0]
+        value_average_year1 = state_land_y1['valavg'].values[0] 
+        value_average_year2 = state_land_y2['valavg'].values[0]
+
+        print(state_land_y1, state_land_y2)
+        val_acre_tot1 = value_total_year1 / state_land_y1
+        val_acre_tot2 = value_total_year2 / state_land_y2
+
+        if state_land_y1['liftot'].values[0] == -1 or state_land_y2['liftot'].values[0] == -1:
             total_land_change_percentage = "N/A"
             land_change_percentage = "N/A"
         else:
-            total_land_change_percentage = ((end_land - start_land) / start_land) * 100
-            land_change_percentage = ((land_owned_total_year2 - land_owned_total_year1) / land_owned_total_year1) * 100
+            total_land_change_percentage = ((state_land_y2 - state_land_y1) / state_land_y1) * 100
+            land_change_percentage = ((state_land_y2 - state_land_y1) / state_land_y1) * 100
+            
+        print(state_land_y1, state_land_y2)
 
         response_data = {
-            "name": name_year1,
+            "name": name_input,
             "total_land_change_percentage": total_land_change_percentage,
             "land_change_percentage": land_change_percentage,
             "value_change": {
