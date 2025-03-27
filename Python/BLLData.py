@@ -97,7 +97,8 @@ def get_data():
 
         if data_year1.empty or data_year2.empty:
             return jsonify({"error": "Data for the given year(s), state, or name is not available."})
-
+       
+    
         name_year1 = data_year1['name'].values[0]
         start_land = data_start['liftot'].values[0]
         end_land = data_end['liftot'].values[0]
@@ -113,7 +114,11 @@ def get_data():
         val_acre_tot1 = value_total_year1 / land_owned_total_year1
         val_acre_tot2 = value_total_year2 / land_owned_total_year2
 
-        total_land_change_percentage = ((end_land - start_land) / start_land) * 100
+        if data_year1['liftot'].values[0].empty or data_year2['liftot'].values[0].empty:
+            total_land_change_percentage = "N/A"
+        else:
+            total_land_change_percentage = ((end_land - start_land) / start_land) * 100
+
         land_change_percentage = ((land_owned_total_year2 - land_owned_total_year1) / land_owned_total_year1) * 100
 
         response_data = {

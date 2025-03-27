@@ -5,6 +5,25 @@
   text-align: center;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center; 
+}
+
+/* Side-by-side on wider screens */
+@media (min-width: 1024px) {
+  .app-container {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    align-items: center; 
+    text-align: left;
+  }
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -130,4 +149,5 @@
   transform: scale(0.65); /* Shrinks the text */
   display: inline-block; /* Ensures scaling works properly */
 }
+
 

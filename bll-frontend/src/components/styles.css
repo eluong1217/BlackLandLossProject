@@ -21,23 +21,18 @@ html {
     text-align: center;
   }
   
-  /* ✅ Default map size for mobile screens */
+
   .map-container {
-    width: 300px;  /* Default width */
-    height: 300px; /* Default height */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .data-form-container {
+    flex-shrink: 0;
+    width: 100%;
   }
   
-  /* ✅ Expand map size for screens larger than 768px */
-  @media (min-width: 768px) {
-    .map-container {
-      width: 600px;
-      height: 375px;
-    }
-  }
   
 /* ✅ General Dropdown Styling */
 select {
@@ -175,3 +170,32 @@ select option {
     background: rgb(200, 50, 30);
     transform: scale(1.2);
 }
+
+.landloss-section {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 2rem;
+}
+
+.landloss-box {
+  text-align: center;
+}
+
+.landloss-box h3 {
+  font-size: 1rem;                 /* Smaller text */
+  border-bottom: 4px solid #555;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.landloss-value {
+  font-size: 2.75rem;              /* Big bold number */
+  font-weight: bold;
+  color: #ff5733;
+  margin: 0;
+}
+
+

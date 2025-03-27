@@ -25,29 +25,25 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     53: 'OKLAHOMA',
     54: 'TENNESSEE',
     56: 'WEST VIRGINIA'
-  }
+  };
 
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedStartDate, setSelectedStartDate] = useState(allowedYears[0]);
   const [selectedEndDate, setSelectedEndDate] = useState(allowedYears[allowedYears.length - 1]);
   const [counties, setCounties] = useState([]);
-  const [landData, setLandData] = useState("");
+  const [stateLandData, setStateLandData] = useState("");
+  const [countyLandData, setCountyLandData] = useState("");
 
-  // ✅ Fixed list of years for the slider
-
-
-  // Convert years to index positions for the slider
   const getYearIndex = (year) => allowedYears.indexOf(year);
   const getYearFromIndex = (index) => allowedYears[index];
 
   useEffect(() => {
     if (selectedState) {
       const stateData = statesAndCounties.find((state) => state.state_code === selectedState);
-
       if (stateData) {
         setCounties(stateData.counties);
-        setSelectedStartDate(allowedYears[0]);  // Set default start to first year
-        setSelectedEndDate(allowedYears[allowedYears.length - 1]); // Set default end to last year
+        setSelectedStartDate(allowedYears[0]);
+        setSelectedEndDate(allowedYears[allowedYears.length - 1]);
       } else {
         setCounties([]);
       }
@@ -56,61 +52,64 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
   }, [allowedYears, selectedState, statesAndCounties]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchStateData = async () => {
+      if (!selectedState) return;
       try {
-        console.log({
-          year1: selectedStartDate,
-          year2: selectedEndDate,
-          state: selectedState,
-          name: selectedCounty === "" ? statesMap[selectedState] : selectedCounty.toUpperCase()
-        })
         const response = await fetch('http://127.0.0.1:5000/get-data', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           mode: 'cors',
           body: JSON.stringify({
             year1: selectedStartDate,
             year2: selectedEndDate,
             state: selectedState,
-            name: selectedCounty === "" ? statesMap[selectedState] : selectedCounty.toUpperCase()
+            name: statesMap[selectedState]
           }),
         });
-
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
         const data = await response.json();
-        setLandData(data)
+        setStateLandData(data);
+        setCountyLandData(""); // Clear county data on state change
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching state data:", error);
       }
     };
 
-    fetchData();
-  }, [selectedStartDate, selectedEndDate, selectedState, selectedCounty]);
+    fetchStateData();
+  }, [selectedState, selectedStartDate, selectedEndDate]);
 
-  // Handle Start Date Change (Snaps to nearest allowed year)
+  useEffect(() => {
+    const fetchCountyData = async () => {
+      if (!selectedCounty) return;
+      try {
+        const response = await fetch('http://127.0.0.1:5000/get-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          mode: 'cors',
+          body: JSON.stringify({
+            year1: selectedStartDate,
+            year2: selectedEndDate,
+            state: selectedState,
+            name: selectedCounty.toUpperCase()
+          }),
+        });
+        const data = await response.json();
+        setCountyLandData(data);
+      } catch (error) {
+        console.error("Error fetching county data:", error);
+      }
+    };
+
+    fetchCountyData();
+  }, [selectedCounty, selectedStartDate, selectedEndDate, selectedState]);
+
   const handleStartDateChange = (event) => {
-    const newIndex = parseInt(event.target.value, 10);
-    const newYear = getYearFromIndex(newIndex);
-
-    if (newYear <= selectedEndDate) {
-      setSelectedStartDate(newYear);
-    }
+    const newYear = getYearFromIndex(parseInt(event.target.value, 10));
+    if (newYear <= selectedEndDate) setSelectedStartDate(newYear);
   };
 
-  // Handle End Date Change (Snaps to nearest allowed year)
   const handleEndDateChange = (event) => {
-    const newIndex = parseInt(event.target.value, 10);
-    const newYear = getYearFromIndex(newIndex);
-
-    if (newYear >= selectedStartDate) {
-      setSelectedEndDate(newYear);
-    }
+    const newYear = getYearFromIndex(parseInt(event.target.value, 10));
+    if (newYear >= selectedStartDate) setSelectedEndDate(newYear);
   };
 
   return (
@@ -155,72 +154,109 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
             </div>
           </div>
         )}
-        <h3>Select a State</h3>
-        <form>
-          <div>
-            <p>{selectedState
-              ? statesAndCounties.find(state => state.state_code === selectedState)?.state_name
-              : "No state selected"}
-            </p>
+
+        {/* ✅ STATE LAND DATA */}
+        {selectedState && stateLandData && (
+          <div className="state-county-data">
+            <h3>
+              Land Data for {statesAndCounties.find(state => state.state_code === selectedState)?.state_name || 'Selected State'}
+            </h3>
+
+            {stateLandData.total_land_change_percentage !== undefined && (
+              <>
+                <h4>Land Change</h4>
+                <p>Total land change 1920-1997: {stateLandData.total_land_change_percentage}%</p>
+                <p>Land change between {selectedStartDate}-{selectedEndDate}: {stateLandData.land_change_percentage}%</p>
+              </>
+            )}
+
+            {stateLandData.value_change && (
+              <>
+                <h4>Value Change</h4>
+                <p>Average value in first year: ${stateLandData.value_change.year1}</p>
+                <p>Average value in second year: ${stateLandData.value_change.year2}</p>
+              </>
+            )}
+
+            {stateLandData.land_value_range && (
+              <>
+                <h4>Land Value (per acre)</h4>
+                <p>First year: ${stateLandData.land_value_range.year1?.highest}</p>
+                <p>Second year: ${stateLandData.land_value_range.year2?.highest}</p>
+              </>
+            )}
           </div>
-          {selectedState && (
-            <div className="dropdown-container">
-              <label>County:</label>
-              <select
-                value={selectedCounty}
-                onChange={(e) => setSelectedCounty(e.target.value)}
-              >
-                <option value="">Select County</option>
-                {counties.map((county, index) => (
-                  <option key={index} value={county}>
-                    {county}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </form>
-        <div className="selection-summary">
-          {selectedState && selectedCounty && selectedStartDate && selectedEndDate && (
-            <div>
-              <h4>Selection Summary:</h4>
-              <p><strong>State:</strong> {statesAndCounties.find(state => state.state_code === selectedState)?.state_name}</p>
-              <p><strong>County:</strong> {selectedCounty}</p>
-              <p><strong>Dates:</strong> {selectedStartDate} → {selectedEndDate}</p>
-            </div>
-          )}
-        </div>
+        )}
+
+<form>
+  {!selectedState && <h3>Select a State</h3>}
+
+  
+  {selectedState && !selectedCounty && (
+    <h4 style={{ marginTop: "1rem" }}>SELECT A COUNTY</h4>
+  )}
+
+  {selectedState && (
+    <div className="dropdown-container">
+      <label>County:</label>
+      <select
+        value={selectedCounty}
+        onChange={(e) => setSelectedCounty(e.target.value)}
+      >
+        <option value="">Select County</option>
+        {counties.map((county, index) => (
+          <option key={index} value={county}>
+            {county}
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
+</form>
+
+ {/* THISSSSS ISSSS FOR COUNTYYYYYYYYY */}
+
+        {selectedCounty && countyLandData && (
+          <div>
+            <h3>Land Data for {selectedCounty}</h3>
+
+            {countyLandData.total_land_change_percentage !== undefined && (
+              <>
+                <div className="title">Land Change</div>
+                <p>Total land change 1920-1997: {countyLandData.total_land_change_percentage}%</p>
+                <p>Land change between {selectedStartDate}-{selectedEndDate}: {countyLandData.land_change_percentage}%</p>
+              </>
+            )}
+
+            {countyLandData.value_change && (
+              <>
+                <h4>Value Change</h4>
+                <p>Average value in first year: ${countyLandData.value_change.year1}</p>
+                <p>Average value in second year: ${countyLandData.value_change.year2}</p>
+              </>
+            )}
+
+            {countyLandData.land_value_range && (
+              <>
+                <h4>Land Value (per acre)</h4>
+                <p>First year: ${countyLandData.land_value_range.year1?.highest}</p>
+                <p>Second year: ${countyLandData.land_value_range.year2?.highest}</p>
+              </>
+            )}
+<div className="landloss-section">
+  <div className="landloss-box">
+    <h3>State Landloss</h3>
+    <p className="landloss-value">4.13</p>
+  </div>
+  <div className="landloss-box">
+    <h3>County Landloss</h3>
+    <p className="landloss-value">4.13</p>
+  </div>
+</div>
+
+          </div>
+        )}
       </div>
-
-      {selectedState && landData && (
-        <div className="state-county-data">
-          <h3>Land Data for {landData.name || 'Selected Area'}</h3>
-
-          {landData.total_land_change_percentage !== undefined && (
-            <>
-              <h4>Land Change</h4>
-              <p>Total land change 1920-1997: {landData.total_land_change_percentage}%</p>
-              <p>Land change between {selectedStartDate}-{selectedEndDate}: {landData.land_change_percentage}%</p>
-            </>
-          )}
-
-          {landData.value_change && (
-            <>
-              <h4>Value Change</h4>
-              <p>Average value in first year: ${landData.value_change.year1}</p>
-              <p>Average value in second year: ${landData.value_change.year2}</p>
-            </>
-          )}
-
-          {landData.land_value_range && (
-            <>
-              <h4>Land Value (per acre)</h4>
-              <p>First year: ${landData.land_value_range.year1?.highest}</p>
-              <p>Second year: ${landData.land_value_range.year2?.highest}</p>
-            </>
-          )}
-        </div>
-      )}
     </div>
   );
 };
