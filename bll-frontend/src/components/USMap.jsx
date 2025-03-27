@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { Tooltip } from "react-tooltip";
 import "./styles.css";
@@ -27,6 +27,7 @@ const stateNameMap = {
 };
 
 const USMap = ({ selectedState, setSelectedState, statesAndCounties }) => {
+  // eslint-disable-next-line no-unused-vars
   const [tooltipContent, setTooltipContent] = useState("");
 
   return (

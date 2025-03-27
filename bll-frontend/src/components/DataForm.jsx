@@ -188,42 +188,46 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
           </div>
         )}
 
-<form>
-  {!selectedState && <h3>Select a State</h3>}
+        <form>
+          {!selectedState && <h3>Select a State</h3>}
 
-  
-  {selectedState && !selectedCounty && (
-    <h4 style={{ marginTop: "1rem" }}>SELECT A COUNTY</h4>
-  )}
 
-  {selectedState && (
-    <div className="dropdown-container">
-      <label>County:</label>
-      <select
-        value={selectedCounty}
-        onChange={(e) => setSelectedCounty(e.target.value)}
-      >
-        <option value="">Select County</option>
-        {counties.map((county, index) => (
-          <option key={index} value={county}>
-            {county}
-          </option>
-        ))}
-      </select>
-    </div>
-  )}
-</form>
+          {selectedState && !selectedCounty && (
+            <h4 style={{ marginTop: "1rem" }}>SELECT A COUNTY</h4>
+          )}
 
- {/* THISSSSS ISSSS FOR COUNTYYYYYYYYY */}
+          {selectedState && (
+            <div className="dropdown-container">
+              <label>County:</label>
+              <select
+                value={selectedCounty}
+                onChange={(e) => setSelectedCounty(e.target.value)}
+              >
+                <option value="">Select County</option>
+                {counties.map((county, index) => (
+                  <option key={index} value={county}>
+                    {county}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </form>
+
+        {/* THISSSSS ISSSS FOR COUNTYYYYYYYYY */}
 
         {selectedCounty && countyLandData && (
           <div>
             <h3>Land Data for {selectedCounty}</h3>
-
             {countyLandData.total_land_change_percentage !== undefined && (
               <>
                 <div className="title">Land Change</div>
-                <p>Total land change 1920-1997: {countyLandData.total_land_change_percentage}%</p>
+                <p>
+                  Total land change 1920-1997:
+                  {countyLandData.total_land_change_percentage === "N/A"
+                    ? countyLandData.total_land_change_percentage
+                    : `${countyLandData.total_land_change_percentage}%`}
+                </p>                
                 <p>Land change between {selectedStartDate}-{selectedEndDate}: {countyLandData.land_change_percentage}%</p>
               </>
             )}
@@ -243,16 +247,16 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
                 <p>Second year: ${countyLandData.land_value_range.year2?.highest}</p>
               </>
             )}
-<div className="landloss-section">
-  <div className="landloss-box">
-    <h3>State Landloss</h3>
-    <p className="landloss-value">4.13</p>
-  </div>
-  <div className="landloss-box">
-    <h3>County Landloss</h3>
-    <p className="landloss-value">4.13</p>
-  </div>
-</div>
+            <div className="landloss-section">
+              <div className="landloss-box">
+                <h3>State Landloss</h3>
+                <p className="landloss-value">4.13</p>
+              </div>
+              <div className="landloss-box">
+                <h3>County Landloss</h3>
+                <p className="landloss-value">4.13</p>
+              </div>
+            </div>
 
           </div>
         )}

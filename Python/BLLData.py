@@ -8,7 +8,7 @@ CORS(app, origins=["http://localhost:8000"])
 # Read Excel file
 file_path = './dvf_bll_bld_001_v01.csv'
 df = pd.read_csv(file_path)
-df = df.fillna(0)
+df = df.fillna(-1)
 df['name'] = df['name'].str.strip()
 
 
@@ -114,12 +114,12 @@ def get_data():
         val_acre_tot1 = value_total_year1 / land_owned_total_year1
         val_acre_tot2 = value_total_year2 / land_owned_total_year2
 
-        if data_year1['liftot'].values[0].empty or data_year2['liftot'].values[0].empty:
+        if data_year1['liftot'].values[0] == -1 or data_year2['liftot'].values[0] == -1:
             total_land_change_percentage = "N/A"
+            land_change_percentage = "N/A"
         else:
             total_land_change_percentage = ((end_land - start_land) / start_land) * 100
-
-        land_change_percentage = ((land_owned_total_year2 - land_owned_total_year1) / land_owned_total_year1) * 100
+            land_change_percentage = ((land_owned_total_year2 - land_owned_total_year1) / land_owned_total_year1) * 100
 
         response_data = {
             "name": name_year1,
