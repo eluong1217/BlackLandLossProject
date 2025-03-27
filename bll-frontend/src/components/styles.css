@@ -24,13 +24,13 @@ html {
 
   .map-container {
     flex-shrink: 0;
-    width: 100%;
+    width: 40%;
     height: 100%;
   }
 
   .data-form-container {
     flex-shrink: 0;
-    width: 100%;
+    width: 60%;
   }
   
   
