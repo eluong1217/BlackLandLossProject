@@ -55,7 +55,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     const fetchStateData = async () => {
       if (!selectedState) return;
       try {
-        const response = await fetch('http://127.0.0.1:5000/get-data', {
+        const response = await fetch('http://127.0.0.1:5000/get-state-data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           mode: 'cors',
@@ -63,7 +63,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
             year1: selectedStartDate,
             year2: selectedEndDate,
             state: selectedState,
-            name: statesMap[selectedState]
+            name: statesMap[selectedState],
           }),
         });
         const data = await response.json();
@@ -81,7 +81,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     const fetchCountyData = async () => {
       if (!selectedCounty) return;
       try {
-        const response = await fetch('http://127.0.0.1:5000/get-data', {
+        const response = await fetch('http://127.0.0.1:5000/get-county-data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           mode: 'cors',
@@ -161,30 +161,6 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
             <h3>
               Land Data for {statesAndCounties.find(state => state.state_code === selectedState)?.state_name || 'Selected State'}
             </h3>
-
-            {stateLandData.total_land_change_percentage !== undefined && (
-              <>
-                <h4>Land Change</h4>
-                <p>Total land change 1920-1997: {stateLandData.total_land_change_percentage}%</p>
-                <p>Land change between {selectedStartDate}-{selectedEndDate}: {stateLandData.land_change_percentage}%</p>
-              </>
-            )}
-
-            {stateLandData.value_change && (
-              <>
-                <h4>Value Change</h4>
-                <p>Average value in first year: ${stateLandData.value_change.year1}</p>
-                <p>Average value in second year: ${stateLandData.value_change.year2}</p>
-              </>
-            )}
-
-            {stateLandData.land_value_range && (
-              <>
-                <h4>Land Value (per acre)</h4>
-                <p>First year: ${stateLandData.land_value_range.year1?.highest}</p>
-                <p>Second year: ${stateLandData.land_value_range.year2?.highest}</p>
-              </>
-            )}
           </div>
         )}
 
@@ -218,43 +194,21 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
 
         {selectedCounty && countyLandData && (
           <div>
-            <h3>Land Data for {selectedCounty}</h3>
-            {countyLandData.total_land_change_percentage !== undefined && (
-              <>
-                <div className="title">Land Change</div>
-                <p>
-                  Total land change 1920-1997:
-                  {countyLandData.total_land_change_percentage === "N/A"
-                    ? countyLandData.total_land_change_percentage
-                    : `${countyLandData.total_land_change_percentage}%`}
-                </p>                
-                <p>Land change between {selectedStartDate}-{selectedEndDate}: {countyLandData.land_change_percentage}%</p>
-              </>
-            )}
-
-            {countyLandData.value_change && (
-              <>
-                <h4>Value Change</h4>
-                <p>Average value in first year: ${countyLandData.value_change.year1}</p>
-                <p>Average value in second year: ${countyLandData.value_change.year2}</p>
-              </>
-            )}
-
-            {countyLandData.land_value_range && (
-              <>
-                <h4>Land Value (per acre)</h4>
-                <p>First year: ${countyLandData.land_value_range.year1?.highest}</p>
-                <p>Second year: ${countyLandData.land_value_range.year2?.highest}</p>
-              </>
-            )}
             <div className="landloss-section">
               <div className="landloss-box">
                 <h3>State Landloss</h3>
-                <p className="landloss-value">4.13</p>
+                {console.log(stateLandData)}
+
+                <p className="landloss-value">{stateLandData.state_land_change_percentage === "N/A"
+                    ? stateLandData.state_land_change_percentage
+                    : `${stateLandData.state_land_change_percentage.toFixed(2)}%`}</p>
               </div>
               <div className="landloss-box">
                 <h3>County Landloss</h3>
-                <p className="landloss-value">4.13</p>
+                {console.log(countyLandData)}
+                <p className="landloss-value">{countyLandData.county_land_change_percentage === "N/A"
+                    ? countyLandData.county_land_change_percentage
+                    : `${countyLandData.county_land_change_percentage.toFixed(2)}%`}</p>
               </div>
             </div>
 
