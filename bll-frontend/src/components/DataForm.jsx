@@ -199,16 +199,21 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
                 <h3>State Landloss</h3>
                 {console.log(stateLandData)}
 
-                <p className="landloss-value">{stateLandData.state_land_change_percentage === "N/A"
-                    ? stateLandData.state_land_change_percentage
-                    : `${stateLandData.state_land_change_percentage.toFixed(2)}%`}</p>
+                  <p className="landloss-value">
+              {stateLandData && typeof stateLandData.state_land_change_percentage === "number"
+                ? `${stateLandData.state_land_change_percentage.toFixed(2)}%`
+                : stateLandData.state_land_change_percentage || "N/A"}
+                 </p>
+
               </div>
               <div className="landloss-box">
                 <h3>County Landloss</h3>
                 {console.log(countyLandData)}
-                <p className="landloss-value">{countyLandData.county_land_change_percentage === "N/A"
-                    ? countyLandData.county_land_change_percentage
-                    : `${countyLandData.county_land_change_percentage.toFixed(2)}%`}</p>
+                <p className="landloss-value">
+                {countyLandData && typeof countyLandData.county_land_change_percentage === "number"
+                  ? `${countyLandData.county_land_change_percentage.toFixed(2)}%`
+                  : countyLandData.county_land_change_percentage || "N/A"}
+              </p>
               </div>
             </div>
 
