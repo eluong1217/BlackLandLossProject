@@ -22,9 +22,13 @@ function App() {
   }, []);
 
   return (
-    <div className="app-container">
-      <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
-      <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
+    <div>
+      <h1 className="main-header">Test Header</h1>
+      <p className="main-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. At nulla id veniam ratione, necessitatibus eligendi voluptates fugiat ea iste harum pariatur laboriosam in omnis ducimus minima molestiae? Nisi, soluta dolorum?</p>
+      <div className="app-container">
+        <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
+        <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
+      </div>
     </div>
   );
 }
