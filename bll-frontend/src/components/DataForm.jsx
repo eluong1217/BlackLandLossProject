@@ -2,6 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import "./styles.css";
 
 const DataForm = ({ selectedState, statesAndCounties }) => {
+  const baseUrl =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8000/"
+    : import.meta.env.VITE_BACKEND_URL;
+
   const allowedYears = useMemo(() => [
     1920, 1925, 1930, 1935, 1940, 1945, 1950, 1954, 1959,
     1964, 1969, 1974, 1978, 1982, 1987, 1992, 1997
@@ -55,7 +60,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     const fetchStateData = async () => {
       if (!selectedState) return;
       try {
-        const response = await fetch('http://127.0.0.1:5000/get-state-data', {
+        const response = await fetch(`${baseUrl}/get-state-data`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           mode: 'cors',
@@ -81,7 +86,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     const fetchCountyData = async () => {
       if (!selectedCounty) return;
       try {
-        const response = await fetch('http://127.0.0.1:5000/get-county-data', {
+        const response = await fetch(`${baseUrl}/get-county-data`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           mode: 'cors',
@@ -196,7 +201,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
           <div>
             <div className="landloss-section">
               <div className="landloss-box">
-                <h3>State Landloss</h3>
+                <h3>State Land Change</h3>
                 {console.log(stateLandData)}
 
                   <p className="landloss-value">
@@ -207,7 +212,7 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
 
               </div>
               <div className="landloss-box">
-                <h3>County Landloss</h3>
+                <h3>County Land Change</h3>
                 {console.log(countyLandData)}
                 <p className="landloss-value">
                 {countyLandData && typeof countyLandData.county_land_change_percentage === "number"
