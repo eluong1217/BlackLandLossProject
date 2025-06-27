@@ -1,4 +1,8 @@
 flask
 pandas
 flask-cors
+<<<<<<< HEAD
 gunicorn
+=======
+gunicorn 
+>>>>>>> eric

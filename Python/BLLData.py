@@ -1,16 +1,18 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from flask_cors import CORS
+import math
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:8000"])
+CORS(app, origins=["http://localhost:8000", "https://blacklandloss-frontend-398535004772.us-central1.run.app"])
 
 # Read Excel file
-file_path = './dvf_bll_bld_001_v01.csv'
+file_path = './dvf_bll_bld_001_v01.csv' 
 df = pd.read_csv(file_path)
-df = df.fillna(0)
-df['name'] = df['name'].str.strip()
+df = df.fillna(-1)
+# df = df.replace(0, 1)
 
+df['name'] = df['name'].str.strip()
 
 # Retrieve all states and counties
 states = {
@@ -79,62 +81,117 @@ def get_states_and_counties():
     
     return jsonify(states_and_counties)
 
-
-@app.route('/get-data', methods=['POST'])
-def get_data():
+@app.route('/get-state-data', methods=['POST'])
+def get_state_data():
     try:
         data = request.json
         year1 = int(float(data.get('year1')))
         year2 = int(float(data.get('year2')))
-        name_input = data.get('name') 
-        state_input = data.get('state')
+        name_input = data.get('name')
 
-        # getting state data
-        data_start = df[(df['year'] == 1920) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_end = df[(df['year'] == 1997) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_year1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['county'] == 0)]
-        data_year2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['county'] == 0)]
+        state_data_y1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['county'] == 0)]
+        state_data_y2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['county'] == 0)]
 
-        if data_year1.empty or data_year2.empty:
-            return jsonify({"error": "Data for the given year(s), state, or name is not available."})
+        state_land_y1 = state_data_y1['liftot'].values[0]
+        state_land_y2 = state_data_y2['liftot'].values[0]
+        value_total_year1 = state_data_y1['valtot'].values[0]
+        value_total_year2 = state_data_y2['valtot'].values[0]
+        value_average_year1 = state_data_y1['valavg'].values[0]
+        value_average_year2 = state_data_y2['valavg'].values[0]
 
-        name_year1 = data_year1['name'].values[0]
-        start_land = data_start['liftot'].values[0]
-        end_land = data_end['liftot'].values[0]
+        val_acre_tot1 = (
+            value_total_year1 / state_land_y1
+            if state_land_y1 not in [0, -1] else None
+        )
+        val_acre_tot2 = (
+            value_total_year2 / state_land_y2
+            if state_land_y2 not in [0, -1] else None
+        )
 
-        land_owned_total_year1 = data_year1['liftot'].values[0]
-        land_owned_total_year2 = data_year2['liftot'].values[0]
+        if state_land_y1 in [0, -1] or state_land_y2 in [0, -1]:
+            state_land_change_percentage = "N/A"
+        else:
+            state_land_change_percentage = ((state_land_y2 - state_land_y1) / state_land_y1) * 100
 
-        value_total_year1 = data_year1['valtot'].values[0]
-        value_total_year2 = data_year2['valtot'].values[0]
-        value_average_year1 = data_year1['valavg'].values[0] 
-        value_average_year2 = data_year2['valavg'].values[0]
+        def safe(val):
+            if isinstance(val, float) and (math.isnan(val) or math.isinf(val)):
+                return None
+            return round(val, 2) if isinstance(val, float) else val
 
-        val_acre_tot1 = value_total_year1 / land_owned_total_year1
-        val_acre_tot2 = value_total_year2 / land_owned_total_year2
-
-        total_land_change_percentage = ((end_land - start_land) / start_land) * 100
-        land_change_percentage = ((land_owned_total_year2 - land_owned_total_year1) / land_owned_total_year1) * 100
-
-        response_data = {
-            "name": name_year1,
-            "total_land_change_percentage": total_land_change_percentage,
-            "land_change_percentage": land_change_percentage,
+        return jsonify({
+            "name": name_input,
+            "state_land_change_percentage": safe(state_land_change_percentage),
             "value_change": {
-                "year1": value_average_year1,
-                "year2": value_average_year2
+                "year1": safe(value_average_year1),
+                "year2": safe(value_average_year2)
             },
             "land_value_range": {
-                "year1": {"highest": val_acre_tot1, "lowest": val_acre_tot1},
-                "year2": {"highest": val_acre_tot2, "lowest": val_acre_tot2}
+                "year1": {"highest": safe(val_acre_tot1), "lowest": safe(val_acre_tot1)},
+                "year2": {"highest": safe(val_acre_tot2), "lowest": safe(val_acre_tot2)}
             }
-        }
-
-        return jsonify(response_data)
-
+        })
     except Exception as e:
         return jsonify({"error": str(e)})
 
+@app.route('/get-county-data', methods=['POST'])
+def get_county_data():
+    try:
+        data = request.json
+        year1 = int(float(data.get('year1')))
+        year2 = int(float(data.get('year2')))
+        name_input = data.get('name')
+        state_input = data.get('state')
+
+        county_y1 = df[(df['year'] == year1) & (df['name'] == name_input) & (df['state'] == state_input)]
+        county_y2 = df[(df['year'] == year2) & (df['name'] == name_input) & (df['state'] == state_input)]
+
+        county_land_y1 = county_y1['liftot'].values[0]
+        county_land_y2 = county_y2['liftot'].values[0]
+        value_total_year1 = county_y1['valtot'].values[0]
+        value_total_year2 = county_y2['valtot'].values[0]
+        value_average_year1 = county_y1['valavg'].values[0]
+        value_average_year2 = county_y2['valavg'].values[0]
+
+        # Protect against division by zero or invalid values
+        val_acre_tot1 = (
+            value_total_year1 / county_land_y1
+            if county_land_y1 not in [0, -1] else None
+        )
+        val_acre_tot2 = (
+            value_total_year2 / county_land_y2
+            if county_land_y2 not in [0, -1] else None
+        )
+
+        # Calculate percentage change safely
+        if county_land_y1 in [0, -1] or county_land_y2 in [0, -1]:
+            county_land_change_percentage = "N/A"
+        else:
+            county_land_change_percentage = (
+                ((county_land_y2 - county_land_y1) / county_land_y1) * 100
+            )
+
+        # Ensure all values are safe for JSON
+        def safe(val):
+            if isinstance(val, float) and (math.isnan(val) or math.isinf(val)):
+                return None
+            return round(val, 2) if isinstance(val, float) else val
+
+        return jsonify({
+            "name": name_input,
+            "county_land_change_percentage": safe(county_land_change_percentage),
+            "value_change": {
+                "year1": safe(value_average_year1),
+                "year2": safe(value_average_year2)
+            },
+            "land_value_range": {
+                "year1": {"highest": safe(val_acre_tot1), "lowest": safe(val_acre_tot1)},
+                "year2": {"highest": safe(val_acre_tot2), "lowest": safe(val_acre_tot2)}
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
 
