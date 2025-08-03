@@ -14,7 +14,7 @@ df = df.fillna(-1)
 
 df['name'] = df['name'].str.strip()
 
-# Retrieve all states and counties
+# Retrieve all states and years
 states = {
    11: "DELAWARE", 
    34: "MISSOURI", 

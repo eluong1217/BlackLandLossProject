@@ -6,7 +6,7 @@ import USMap from "./components/USMap";
 function App() {
   const baseUrl =
     import.meta.env.MODE === "development"
-      ? "http://localhost:8000/"
+      ? "http://127.0.0.1:5000/"
       : import.meta.env.VITE_BACKEND_URL;
 
 
@@ -31,6 +31,7 @@ function App() {
     <div>
       <h1 className="main-header">Black Land Loss Website</h1>
       <p className="main-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. At nulla id veniam ratione, necessitatibus eligendi voluptates fugiat ea iste harum pariatur laboriosam in omnis ducimus minima molestiae? Nisi, soluta dolorum?</p>
+      <p className="explanation-text">This website is a work in progress. It will eventually allow users to select a state and county, and view land loss data for that area.</p>
       <div className="app-container">
         <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
         <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />

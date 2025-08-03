@@ -4,7 +4,7 @@ import "./styles.css";
 const DataForm = ({ selectedState, statesAndCounties }) => {
   const baseUrl =
   import.meta.env.MODE === "development"
-    ? "http://localhost:8000/"
+    ? "http://127.0.0.1:5000/"
     : import.meta.env.VITE_BACKEND_URL;
 
   const allowedYears = useMemo(() => [
