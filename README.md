@@ -1,0 +1,1 @@
+Website Favicon: <a href="https://www.flaticon.com/free-icons/plant" title="plant icons">Plant icons created by juicy_fish - Flaticon</a>

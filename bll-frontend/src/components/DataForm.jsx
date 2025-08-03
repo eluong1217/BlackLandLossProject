@@ -117,12 +117,19 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
     if (newYear >= selectedStartDate) setSelectedEndDate(newYear);
   };
 
+  const getLandChangeClass = (value) => {
+    if (typeof value !== "number") return "landloss-neutral";
+    if (value > 0) return "landloss-positive";
+    if (value < 0) return "landloss-negative";
+    return "landloss-neutral";
+  };
+
   return (
     <div className="data-form-container">
       <div className="map-data">
         {allowedYears.length > 0 && (
           <div className="dual-slider-container">
-            <label>Selected Range: {selectedStartDate} → {selectedEndDate}</label>
+            <label>Slide to select range: {selectedStartDate} → {selectedEndDate}</label>
             <div className="slider-wrapper">
               <input
                 type="range"
@@ -203,22 +210,24 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
               <div className="landloss-box">
                 <h3>State Land Change</h3>
                 {console.log(stateLandData)}
-
-                  <p className="landloss-value">
-              {stateLandData && typeof stateLandData.state_land_change_percentage === "number"
-                ? `${stateLandData.state_land_change_percentage.toFixed(2)}%`
-                : stateLandData.state_land_change_percentage || "N/A"}
-                 </p>
-
+                <p
+                  className={`landloss-value ${getLandChangeClass(stateLandData.state_land_change_percentage)}`}
+                >
+                  {stateLandData && typeof stateLandData.state_land_change_percentage === "number"
+                    ? `${stateLandData.state_land_change_percentage.toFixed(2)}%`
+                    : stateLandData.state_land_change_percentage || "N/A"}
+                </p>
               </div>
               <div className="landloss-box">
                 <h3>County Land Change</h3>
                 {console.log(countyLandData)}
-                <p className="landloss-value">
-                {countyLandData && typeof countyLandData.county_land_change_percentage === "number"
-                  ? `${countyLandData.county_land_change_percentage.toFixed(2)}%`
-                  : countyLandData.county_land_change_percentage || "N/A"}
-              </p>
+                <p
+                  className={`landloss-value ${getLandChangeClass(countyLandData.county_land_change_percentage)}`}
+                >
+                  {countyLandData && typeof countyLandData.county_land_change_percentage === "number"
+                    ? `${countyLandData.county_land_change_percentage.toFixed(2)}%`
+                    : countyLandData.county_land_change_percentage || "N/A"}
+                </p>
               </div>
             </div>
 

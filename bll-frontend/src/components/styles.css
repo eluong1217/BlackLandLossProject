@@ -198,4 +198,14 @@ select option {
   margin: 0;
 }
 
+.landloss-positive {
+  color: #4caf50; /* Lighter green, edit as needed */
+}
+.landloss-negative {
+  color: #d7351c; /* Lighter red, edit as needed */
+}
+.landloss-neutral {
+  color: #fff; /* White, edit as needed */
+}
+
 
