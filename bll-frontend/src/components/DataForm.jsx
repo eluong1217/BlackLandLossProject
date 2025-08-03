@@ -73,7 +73,6 @@ const DataForm = ({ selectedState, statesAndCounties }) => {
         });
         const data = await response.json();
         setStateLandData(data);
-        setCountyLandData(""); // Clear county data on state change
       } catch (error) {
         console.error("Error fetching state data:", error);
       }
