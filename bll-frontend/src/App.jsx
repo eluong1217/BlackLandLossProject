@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import DataForm from "./components/DataForm";
 import USMap from "./components/USMap";
+import Title from "./components/Title";
 
 function App() {
   const baseUrl =
@@ -29,10 +30,17 @@ function App() {
 
   return (
     <div>
-      <h1 className="main-header">Black Land Loss Website</h1>
-      <p className="main-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. At nulla id veniam ratione, necessitatibus eligendi voluptates fugiat ea iste harum pariatur laboriosam in omnis ducimus minima molestiae? Nisi, soluta dolorum?</p>
-      <p className="explanation-text">This website is a work in progress. It will eventually allow users to select a state and county, and view land loss data for that area.</p>
+      {/* Mobile title - outside the card */}
+      <h1 className="mobile-title">Black Land Loss</h1>
+      
+      {/* Mobile message */}
+      <div className="mobile-message">
+        <h2>Hi! Sorry for the inconvenience, but unfortunately the mobile version of this page is still in progress. Check this website out on the computer for the best results.</h2>
+      </div>
+
+      {/* Desktop layout */}
       <div className="app-container">
+        <Title />
         <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
         <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
       </div>

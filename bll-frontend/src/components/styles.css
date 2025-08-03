@@ -34,6 +34,14 @@ html {
   }
   
   
+/* Slider label styling to match main header */
+.dual-slider-container label {
+  color: rgb(255, 87, 51);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 /* ✅ General Dropdown Styling */
 select {
   width: 100%;

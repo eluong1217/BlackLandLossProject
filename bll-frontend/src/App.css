@@ -154,5 +154,54 @@
   color: rgb(255, 87, 51 ); /* Main header text color */
 }
 
-.main-text {
+
+/* Mobile title - shown only on mobile, outside the card */
+.mobile-title {
+  display: none;
+  text-align: center;
+  color: rgb(255, 87, 51);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Mobile message - hidden on desktop, shown on mobile */
+.mobile-message {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+.mobile-message h1 {
+  color: rgb(255, 87, 51);
+  margin-bottom: 1rem;
+  font-size: 1.3rem; /* Adjust this value to make text larger or smaller */
+}
+
+.mobile-message h2 {
+  color: rgb(255, 87, 51);
+  margin-bottom: 1rem;
+  font-size: 1.3rem; /* Adjust this value to make text larger or smaller */
+}
+
+/* Show mobile message and hide app-container on small screens */
+@media (max-width: 768px) {
+  .mobile-title {
+    display: block;
+  }
+  
+  .mobile-message {
+    display: block;
+  }
+  
+  .app-container {
+    display: none;
+  }
+  
+  /* Hide main text and explanation text on mobile */
+  .main-text,
+  .explanation-text {
+    display: none;
+  }
 }
