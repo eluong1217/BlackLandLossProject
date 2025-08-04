@@ -252,7 +252,7 @@ select option {
   line-height: 1.5;
   max-width: 75vw;
   width: 100%;
-  text-align: center;              /* Keep explanation centered */
+  text-align: center;
   margin-left: auto;
   margin-right: auto;
 }
@@ -267,69 +267,11 @@ select option {
 .year-labels span {
   position: absolute;
   transform: translateX(-50%);
-  font-size: max(0.6rem, 1.2vw);   /* Scales from 0.6rem minimum to 1.2% of viewport width */
+  font-size: max(0.2rem, 1vw);
   color: #fff;
-  font-weight: 350;                /* Base weight - will be overridden by media queries */
+  font-weight: 350; 
   white-space: nowrap;
   text-align: center;
-  user-select: none;               /* Prevent text selection */
-  letter-spacing: clamp(-1px, -0.05vw, 0px);  /* Dynamic character spacing */
-}
-
-/* Alternative: Angled year labels for better space usage */
-.year-labels-angled span {
-  transform: translateX(-50%) rotate(-45deg);
-  transform-origin: center bottom;
-  font-size: 0.8rem;
-  font-weight: 400;
-}
-
-/* Alternative: Alternating heights to prevent overlap */
-.year-labels-staggered span:nth-child(even) {
-  top: 15px;  /* Every other label lower */
-}
-
-.year-labels-staggered span:nth-child(odd) {
-  top: 0px;   /* Standard position */
-}
-
-/* Alternative: Ellipsis for overflow */
-.year-labels-ellipsis span {
-  max-width: 30px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Responsive breakpoints for better scaling */
-@media (max-width: 768px) {
-  .year-labels span {
-    font-size: 0.5rem;             /* Smaller on mobile devices */
-    font-weight: 250;              /* Lighter weight on small screens */
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1200px) {
-  .year-labels span {
-    font-weight: 300;              /* Normal weight on medium screens */
-  }
-}
-
-@media (min-width: 1201px) and (max-width: 1600px) {
-  .year-labels span {
-    font-weight: 350;              /* Medium weight on large screens */
-  }
-}
-
-@media (min-width: 1601px) and (max-width: 1920px) {
-  .year-labels span {
-    font-weight: 400;              /* Semi-bold on very large screens */
-  }
-}
-
-@media (min-width: 1921px) {
-  .year-labels span {
-    font-size: 1rem;               /* Cap the size on very large screens */
-    font-weight: 700;              /* Bold on ultra-wide screens */
-  }
+  user-select: none;
+  letter-spacing: clamp(-1px, -0.05vw, 0px); 
 }
