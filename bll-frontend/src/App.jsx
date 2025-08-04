@@ -39,8 +39,8 @@ function App() {
       </div>
 
       {/* Desktop layout */}
+      <Title />
       <div className="app-container">
-        <Title />
         <USMap selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
         <DataForm selectedState={selectedState} setSelectedState={setSelectedState} statesAndCounties={statesAndCounties} />
       </div>

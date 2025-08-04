@@ -199,6 +199,11 @@
     display: none;
   }
   
+  /* Hide the desktop Title component on mobile */
+  .title-section {
+    display: none;
+  }
+  
   /* Hide main text and explanation text on mobile */
   .main-text,
   .explanation-text {
