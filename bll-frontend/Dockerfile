@@ -2,7 +2,7 @@ FROM node:18 AS builder
 
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build
+RUN npm install --legacy-peer-deps && npm run build
 
 FROM node:18
 WORKDIR /app
