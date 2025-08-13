@@ -1,0 +1,249 @@
+/* Page Layout Styles */
+
+/* Navigation Styles */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1a1a1a;
+  border-bottom: 2px solid rgb(255, 87, 51);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 87, 51, 0.1);
+  color: rgb(255, 87, 51);
+}
+
+.nav-link.active {
+  background-color: rgb(255, 87, 51);
+  color: white;
+}
+
+/* Main content wrapper */
+.app {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+}
+
+.main-content {
+  min-height: calc(100vh - 80px); /* Subtract navbar height */
+}
+
+/* Mobile navigation */
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 1rem;
+  }
+  
+  .nav-link {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #fff;
+}
+
+.page-content {
+  background-color: #2a2a2a;
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: rgb(255, 87, 51);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Content sections */
+.content-section {
+  margin-bottom: 2.5rem;
+}
+
+.content-section h2 {
+  color: rgb(255, 87, 51);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgb(255, 87, 51);
+  padding-bottom: 0.5rem;
+}
+
+.content-section h3 {
+  color: rgb(255, 150, 130);
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.content-section p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+/* Lists */
+.content-section ul {
+  color: #e0e0e0;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.content-section li {
+  margin-bottom: 0.5rem;
+}
+
+/* FAQ specific styles */
+.faq-section {
+  margin-top: 2rem;
+}
+
+.faq-item {
+  background-color: #3a3a3a;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid rgb(255, 87, 51);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-question {
+  padding: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+  background-color: rgba(255, 87, 51, 0.1);
+}
+
+.faq-question h3 {
+  color: rgb(255, 87, 51);
+  margin: 0;
+  font-size: 1.2rem;
+  flex: 1;
+}
+
+.faq-toggle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(255, 87, 51);
+  transition: transform 0.3s ease;
+  margin-left: 1rem;
+}
+
+.faq-toggle.open {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.faq-answer p {
+  color: #e0e0e0;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Contact page styles */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.contact-item {
+  background-color: #3a3a3a;
+  padding: 2rem;
+  border-radius: 6px;
+  border-top: 4px solid rgb(255, 87, 51);
+}
+
+.contact-item h3 {
+  color: rgb(255, 87, 51);
+  margin-bottom: 1rem;
+}
+
+.contact-item p {
+  margin-bottom: 0.5rem;
+  color: #e0e0e0;
+}
+
+/* Highlight boxes */
+.highlight-box {
+  background-color: rgba(255, 87, 51, 0.1);
+  border: 1px solid rgb(255, 87, 51);
+  padding: 1.5rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+}
+
+.highlight-box h3 {
+  color: rgb(255, 87, 51);
+  margin-top: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+  
+  .page-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .content-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
