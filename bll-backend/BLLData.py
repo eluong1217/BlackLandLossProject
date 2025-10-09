@@ -7,8 +7,9 @@ app = Flask(__name__)
 CORS(app, origins=[
     "http://localhost:8000", 
     "https://blacklandloss-frontend-398535004772.us-central1.run.app",
-    "https://blacklandloss.gnoule.com"
-    "https://blacklandloss.daniafrancis.com"
+    "https://blacklandloss.gnoule.com",
+    "https://blacklandloss.daniafrancis.com",
+    "https://bll-frontend.onrender.com"
     ])
 
 # Read Excel file
